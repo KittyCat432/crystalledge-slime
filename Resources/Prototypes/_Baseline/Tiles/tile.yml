@@ -2,7 +2,7 @@
   id: BaselineTile
   name: tiles-plating
   sprite: /Textures/_Baseline/Tiles/tile.png
-  baseTurf: BaselineTile # Recursive indestructible
+  baseTurf: Space
   footstepSounds:
     collection: FootstepPlating
   friction: 1.5
