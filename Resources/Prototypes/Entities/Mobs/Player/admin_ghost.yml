@@ -110,8 +110,6 @@
   - type: BypassInteractionChecks
   - type: ExplosionResistance
     damageCoefficient: 0
-  # CrystallEdge
-  - type: CEShowVampireIcons
 
 - type: entity
   abstract: true
