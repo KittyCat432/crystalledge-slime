@@ -16,7 +16,7 @@
 - type: gameMap
   id: Dev
   mapName: Dev
-  mapPath: /Maps/_CE/baseline.yml
+  mapPath: /Maps/_CE/Dev/Dev0.yml
   minPlayers: 0
   stations:
     Dev:
@@ -27,6 +27,32 @@
         - type: StationJobs
           availableJobs:
             BaselineRole: [ -1, -1 ]
+        - type: CEStationZLevels
+          mapsAbove:
+          - /Maps/_CE/Dev/Dev1.yml
+          zLevelsComponentOverrides:
+            - type: MapAtmosphere
+              space: False
+              mixture:
+                volume: 2500
+                immutable: True
+                temperature: 293.15
+                moles:
+                  Oxygen: 21.824879
+                  Nitrogen: 82.10312
+            - type: Parallax
+              parallax: CESky
+            - type: SunShadowCycle
+              offset: 100
+              duration: 300
+            - type: LightCycle
+              offset: 100
+              duration: 300
+              originalColor: "#75e3ff"
+            - type: CEZLevelMapRoof
+            - type: SunShadow
+            - type: MapLight
+              ambientLightColor: "#75e3ff"
 
 - type: zMap
   id: Empty
