@@ -18,6 +18,7 @@ applyTo: "**/*.cs"
 - Always include final newline in files
 - Braces on new lines (Allman style)
 - Minimize LINQ in performance-critical areas to avoid allocations
+- Always put code inside /_CE/ subfolders, add CE prefix to class names.
 
 ### Entity-Component-System (ECS) Architecture
 CrystallEdge uses an ECS architecture:
