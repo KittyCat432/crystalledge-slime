@@ -1,5 +1,4 @@
 using Content.Server.Administration;
-using Content.Shared._CE.SkillsUpgrade;
 using Content.Shared.Administration;
 using Robust.Server.Player;
 using Robust.Shared.Console;
@@ -21,7 +20,7 @@ public sealed class CELevelUpCommand : LocalizedEntityCommands
         {
             // Get completion for players with CESkillUpgradeableComponent
             var options = new List<CompletionOption>();
-            var query = _entities.EntityQueryEnumerator<CESkillUpgradeableComponent>();
+            var query = _entities.EntityQueryEnumerator<Shared._CE.Skill.Upgrade.CESkillUpgradeableComponent>();
 
             while (query.MoveNext(out var uid, out _))
             {
@@ -58,7 +57,7 @@ public sealed class CELevelUpCommand : LocalizedEntityCommands
             return;
         }
 
-        if (!_entities.TryGetComponent<CESkillUpgradeableComponent>(entity, out var upgradeComp))
+        if (!_entities.TryGetComponent<Shared._CE.Skill.Upgrade.CESkillUpgradeableComponent>(entity, out var upgradeComp))
         {
             shell.WriteError("Target player does not have skill upgrade component.");
             return;

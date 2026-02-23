@@ -1,6 +1,6 @@
 using Content.Client._CE.SkillsUpgradeable.UI;
-using Content.Shared._CE.Skills.Prototypes;
-using Content.Shared._CE.SkillsUpgrade;
+using Content.Shared._CE.Skill.Core.Prototypes;
+using Content.Shared._CE.Skill.Upgrade;
 using Robust.Shared.Prototypes;
 
 namespace Content.Client._CE.SkillsUpgradeable;

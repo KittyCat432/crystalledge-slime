@@ -1,15 +1,13 @@
 - type: skill
   id: SphereOfLight
-  unique: false
-  effects:
-  - !type:AddAction
+  effect: !type:AddAction
     action: CEActionSpellSphereOfLight
 
 - type: entity
   id: CEActionSpellSphereOfLight
   parent: CEActionSpellBase
   name: Sphere of Light
-  description: Materialization of a bright and safe light source.
+  description: You can make almost any object glow for a long time at will.
   components:
   - type: CEActionManaCost
     manaCost: 1
@@ -22,8 +20,8 @@
   - type: Action
     useDelay: 1
     icon:
-      sprite: _CE/Actions/magic_light.rsi
-      state: sphere_of_light
+      sprite: _CE/Skills/sphere_of_light.rsi
+      state: icon
   - type: DoAfterArgs
     delay: 0.5
   - type: TargetAction
@@ -92,5 +90,5 @@
 - type: alert
   id: CEGlowing
   icons:
-  - sprite: _CE/Actions/magic_light.rsi
-    state: sphere_of_light
+  - sprite: _CE/Skills/sphere_of_light.rsi
+    state: icon

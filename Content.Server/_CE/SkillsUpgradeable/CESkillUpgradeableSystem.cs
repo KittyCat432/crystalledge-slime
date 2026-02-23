@@ -1,7 +1,8 @@
 using System.Linq;
 using Content.Server._CE.Skills;
-using Content.Shared._CE.Skills.Prototypes;
-using Content.Shared._CE.SkillsUpgrade;
+using Content.Shared._CE.Skill.Core.Components;
+using Content.Shared._CE.Skill.Core.Prototypes;
+using Content.Shared._CE.Skill.Upgrade;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 
@@ -11,11 +12,11 @@ public sealed partial class CESkillUpgradeableSystem : CESharedSkillUpgradeableS
 {
     [Dependency] private readonly CESkillSystem _skill = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
+    [Dependency] private readonly IPrototypeManager _proto = default!;
+
     public override void Initialize()
     {
         base.Initialize();
-
-        SubscribeLocalEvent<CESkillUpgradeableComponent, MapInitEvent>(OnMapInit);
 
         SubscribeNetworkEvent<CETryLearnSkillMessage>(OnClientRequestLearnSkill);
     }
@@ -52,11 +53,6 @@ public sealed partial class CESkillUpgradeableSystem : CESharedSkillUpgradeableS
         {
             ClearSelection((entity, upgradeComp));
         }
-    }
-
-    private void OnMapInit(Entity<CESkillUpgradeableComponent> ent, ref MapInitEvent args)
-    {
-        RepopulatePossibleSkills(ent);
     }
 
     /// <summary>
@@ -104,7 +100,7 @@ public sealed partial class CESkillUpgradeableSystem : CESharedSkillUpgradeableS
 
     private void RepopulatePossibleSkills(Entity<CESkillUpgradeableComponent> ent)
     {
-        ent.Comp.PossibleSkills = _skill.GetLearnableSkills(ent.Owner);
+        ent.Comp.PossibleSkills = GetLearnableSkills(ent.Owner);
 
         // Remove skills that are already in the current selection
         ent.Comp.PossibleSkills.RemoveAll(s => ent.Comp.CurrentUpgradeSelection.Contains(s));
@@ -123,5 +119,51 @@ public sealed partial class CESkillUpgradeableSystem : CESharedSkillUpgradeableS
         var skill = _random.PickAndTake(ent.Comp.PossibleSkills);
         Dirty(ent);
         return skill;
+    }
+
+    /// <summary>
+    ///  Checks if the player can learn the specified skill.
+    /// </summary>
+    public bool CanLearnSkill(
+        EntityUid target,
+        CESkillPrototype skill,
+        CESkillStorageComponent? component = null)
+    {
+        if (!Resolve(target, ref component, false))
+            return false;
+
+        // Check if already learned
+        if (_skill.HaveSkill(target, skill, component))
+            return false;
+
+        //Restrictions check
+        foreach (var req in skill.Restrictions)
+        {
+            if (!req.Check(EntityManager, target))
+                return false;
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Returns a list of all skills the entity can currently learn.
+    /// </summary>
+    public List<ProtoId<CESkillPrototype>> GetLearnableSkills(Entity<CESkillStorageComponent?> ent)
+    {
+        var skills = new List<ProtoId<CESkillPrototype>>();
+
+        if (!Resolve(ent, ref ent.Comp, false))
+            return skills;
+
+        foreach (var skill in _proto.EnumeratePrototypes<CESkillPrototype>())
+        {
+            if (!CanLearnSkill(ent.Owner, skill, ent.Comp))
+                continue;
+
+            skills.Add(skill);
+        }
+
+        return skills;
     }
 }
