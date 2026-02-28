@@ -1,0 +1,291 @@
+- type: entity
+  parent:
+  - BaseMob
+  - MobFlammable
+  - CEMobDamageable
+  - CEMobCombat
+  id: CEFlem
+  name: flem
+  description: TODO
+  categories: [ ForkFiltered ]
+  components:
+  - type: HTN
+    rootTask:
+      task: CEFlemCompound
+    blackboard:
+      NavClimb: !type:Bool
+        true
+      NavSmash: !type:Bool
+        true
+      MaximumIdleTime: !type:Single
+        0
+      MinimumIdleTime: !type:Single
+        0
+      MeleeRange: !type:Single
+        1.5
+  - type: NpcFactionMember
+    factions:
+    - SimpleHostile
+  - type: Sprite
+    drawdepth: Mobs
+    sprite: _CE/Mobs/flem.rsi
+    layers:
+    - map: [ "enum.DamageStateVisualLayers.Base" ]
+      state: alive
+  - type: DamageStateVisuals
+    states:
+      Alive:
+        Base: alive
+      Critical:
+        Base: dead
+      Dead:
+        Base: dead
+  - type: MovementAlwaysTouching
+  - type: MovementSpeedModifier
+    baseWalkSpeed: 1
+    baseSprintSpeed: 1.5
+  - type: MobState
+    allowedStates:
+    - Alive
+    - Dead
+  - type: MobThresholds
+    thresholds:
+      0: Alive
+      10: Dead
+  - type: CEWeapon
+    spriteRotation: -90
+    animations:
+      Primary:
+      - anim: FlemAttack1
+      - anim: FlemAttack2
+  - type: CEMeleeWeapon
+    damageGroups:
+      default:
+        types:
+          Slash: 2
+      pierce:
+        types:
+          Piercing: 2
+
+- type: htnCompound
+  id: CEFlemCompound
+  branches:
+    - tasks:
+        - !type:HTNPrimitiveTask #
+          operator: !type:UtilityOperator
+            proto: CENearbyMeleeTargets
+        - !type:HTNCompoundTask
+          task: CEMeleeAttackTargetCompound
+    - tasks:
+        - !type:HTNCompoundTask
+          task: CEIdleCompound
+
+- type: utilityQuery
+  id: CENearbyMeleeTargets
+  query:
+    - !type:NearbyHostilesQuery
+  considerations:
+    - !type:TargetIsAliveCon
+      curve: !type:BoolCurve
+    - !type:TargetDistanceCon
+      curve: !type:PresetCurve
+        preset: TargetDistance
+    - !type:TargetHealthCon
+      curve: !type:PresetCurve
+        preset: TargetHealth
+    - !type:TargetAccessibleCon
+      curve: !type:BoolCurve
+    - !type:TargetInLOSOrCurrentCon
+      curve: !type:BoolCurve
+
+# Tries to melee attack our target.
+- type: htnCompound
+  id: CEMeleeAttackTargetCompound
+  branches:
+    - preconditions:
+      - !type:KeyExistsPrecondition
+        key: Target
+      tasks:
+        - !type:HTNPrimitiveTask
+          operator: !type:MoveToOperator
+            shutdownState: PlanFinished
+            pathfindInPlanning: true
+            removeKeyOnFinish: false
+            targetKey: TargetCoordinates
+            pathfindKey: TargetPathfind
+            rangeKey: MeleeRange
+        - !type:HTNPrimitiveTask
+          operator: !type:CEMeleeAttackOperator
+            targetKey: Target
+            useType: Primary
+            rangeKey: MeleeRange
+          preconditions:
+            - !type:KeyExistsPrecondition
+              key: Target
+            - !type:TargetInRangePrecondition
+              targetKey: Target
+              rangeKey: MeleeRange
+          services:
+            - !type:UtilityService
+              id: MeleeService
+              proto: CENearbyMeleeTargets
+              key: Target
+
+# Picks a random location for the NPC to move to and idle.
+- type: htnCompound
+  id: CEIdleCompound
+  branches:
+    - tasks:
+        - !type:HTNPrimitiveTask
+          operator: !type:WaitOperator
+            key: IdleTime
+          preconditions:
+            - !type:KeyExistsPrecondition
+              key: IdleTime
+
+    # Pick a new spot and wait there.
+    - preconditions:
+        - !type:BuckledPrecondition
+          isBuckled: false
+        - !type:PulledPrecondition
+          isPulled: false
+      tasks:
+        - !type:HTNPrimitiveTask
+          operator: !type:PickAccessibleOperator
+            rangeKey: IdleRange
+
+        - !type:HTNPrimitiveTask
+          operator: !type:MoveToOperator
+            pathfindInPlanning: false
+
+        - !type:HTNPrimitiveTask
+          operator: !type:RandomOperator
+            targetKey: IdleTime
+            minKey: MinimumIdleTime
+            maxKey: MaximumIdleTime
+
+        - !type:HTNPrimitiveTask
+          operator: !type:WaitOperator
+            key: IdleTime
+          preconditions:
+            - !type:KeyExistsPrecondition
+              key: IdleTime
+
+
+- type: animationAction
+  id: FlemAttack1
+  movementSpeed: 0.5
+  duration: 0.8
+  events:
+    0:
+    - !type:PlaySound
+      sound:
+        path: /Audio/_CE/Effects/Weapon/slash_sword2.ogg
+    - !type:ItemVisualEffect
+      spriteOverride:
+        sprite: _CE/Objects/Weapons/Skimitar/iron.rsi
+        state: icon
+      offsetAnimation:
+      - time: 0.0
+        offset: -0.1, -0.2
+        easing: QuadIn
+      - time: 0.05
+        offset: -0.2, -0.0
+      - time: 0.1
+        offset: -0.3, -0.2
+      - time: 0.2
+        offset: -0.2, -1.2
+        easing: QuadIn
+      - time: 0.3
+        offset: 0.1, -0.5
+        easing: QuadOut
+
+      rotationAnimation:
+      - time: 0.0
+        rotation: 20
+      - time: 0.02
+        rotation: 90
+      - time: 0.07
+        rotation: 180
+      - time: 0.1
+        rotation: 270
+      - time: 0.2
+        rotation: 360
+      - time: 0.2
+        rotation: 400
+
+      colorAnimation:
+      - time: 0.3
+        color: "#ffffff"
+      - time: 0.4
+        color: "#ffffff00"  # Fade out
+        easing: QuadOut
+
+      scaleAnimation:
+      - time: 0.0
+        scale: 1, -1
+    0.25:
+    - !type:WeaponArcAttack
+      range: 0.7
+      arcWidth: 40
+    - !type:Dash
+      distance: 0.1
+
+- type: animationAction
+  id: FlemAttack2
+  movementSpeed: 0.5
+  duration: 0.8
+  events:
+    0:
+    - !type:PlaySound
+      sound:
+        path: /Audio/_CE/Effects/Weapon/slash_sword2.ogg
+    - !type:ItemVisualEffect
+      spriteOverride:
+        sprite: _CE/Objects/Weapons/Skimitar/iron.rsi
+        state: icon
+      offsetAnimation:
+      - time: 0.0
+        offset: 0.1, -0.2
+        easing: QuadIn
+      - time: 0.05
+        offset: 0.2, -0.0
+      - time: 0.1
+        offset: 0.3, -0.2
+      - time: 0.2
+        offset: 0.2, -1.2
+        easing: QuadIn
+      - time: 0.3
+        offset: -0.1, -0.5
+        easing: QuadOut
+
+      rotationAnimation:
+      - time: 0.0
+        rotation: -20
+      - time: 0.02
+        rotation: -90
+      - time: 0.07
+        rotation: -180
+      - time: 0.1
+        rotation: -270
+      - time: 0.2
+        rotation: -360
+      - time: 0.2
+        rotation: -400
+
+      colorAnimation:
+      - time: 0.3
+        color: "#ffffff"
+      - time: 0.4
+        color: "#ffffff00"  # Fade out
+        easing: QuadOut
+
+      scaleAnimation:
+      - time: 0.0
+        scale: 1, 1
+    0.25:
+    - !type:WeaponArcAttack
+      range: 0.7
+      arcWidth: 40
+    - !type:Dash
+      distance: 0.1

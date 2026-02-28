@@ -2,7 +2,8 @@
   abstract: true
   parent:
   - BaseMob
-  - MobCombat
+  - MobFlammable
+  - CEMobCombat
   - CEMobDamageable
   - CEMobMagical
   - CEMobStatBased
