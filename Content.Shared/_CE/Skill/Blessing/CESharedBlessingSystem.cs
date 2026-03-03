@@ -1,16 +1,12 @@
 using Content.Shared._CE.Skill.Blessing.Components;
 using Content.Shared._CE.Skill.Core;
 using Content.Shared.Interaction;
-using Robust.Shared.Prototypes;
-using Robust.Shared.Random;
 
 namespace Content.Shared._CE.Skill.Blessing;
 
 public abstract partial class CESharedBlessingSystem : EntitySystem
 {
     [Dependency] private readonly CESharedSkillSystem _skill = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly IPrototypeManager _proto = default!;
 
     public override void Initialize()
     {

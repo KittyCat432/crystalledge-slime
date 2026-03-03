@@ -4,10 +4,8 @@ using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
 using Robust.Client.Input;
 using Robust.Client.Player;
-using Robust.Client.State;
 using Robust.Shared.Input;
 using Robust.Shared.Map;
-using Robust.Shared.Prototypes;
 
 namespace Content.Client._CE.Animation.Item;
 
@@ -16,10 +14,8 @@ public sealed partial class CEClientWeaponSystem : CESharedWeaponSystem
     [Dependency] private readonly IEyeManager _eyeManager = default!;
     [Dependency] private readonly IInputManager _inputManager = default!;
     [Dependency] private readonly IPlayerManager _player = default!;
-    [Dependency] private readonly IStateManager _stateManager = default!;
     [Dependency] private readonly InputSystem _inputSystem = default!;
     [Dependency] private readonly MapSystem _map = default!;
-    [Dependency] private readonly IPrototypeManager _proto = default!;
 
     private EntityQuery<TransformComponent> _xformQuery;
 
