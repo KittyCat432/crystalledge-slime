@@ -30,28 +30,19 @@
     drawdepth: Mobs
     sprite: _CE/Mobs/flem.rsi
     layers:
-    - map: [ "enum.DamageStateVisualLayers.Base" ]
+    - map: [ "livingState" ]
       state: alive
-  - type: DamageStateVisuals
-    states:
-      Alive:
-        Base: alive
-      Critical:
-        Base: dead
-      Dead:
-        Base: dead
+  - type: GenericVisualizer
+    visuals:
+      enum.CEHealthState.State:
+        livingState:
+          Alive: { state: alive }
+          Critical: { state: dead }
+          State: { state: dead }
   - type: MovementAlwaysTouching
   - type: MovementSpeedModifier
     baseWalkSpeed: 1
     baseSprintSpeed: 1.5
-  - type: MobState
-    allowedStates:
-    - Alive
-    - Dead
-  - type: MobThresholds
-    thresholds:
-      0: Alive
-      10: Dead
   - type: CEWeapon
     spriteRotation: -90
     animations:
@@ -61,11 +52,8 @@
   - type: CEMeleeWeapon
     damageGroups:
       default:
-        types:
-          Slash: 2
-      pierce:
-        types:
-          Piercing: 2
+        damage:
+          Physical: 2
 
 - type: htnCompound
   id: CEFlemCompound
