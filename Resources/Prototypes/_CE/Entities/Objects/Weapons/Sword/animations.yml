@@ -9,7 +9,7 @@
     - !type:PlaySound
       sound:
         path: /Audio/_CE/Effects/Weapon/slash.ogg
-    - !type:ItemVisualEffect
+    - !type:EntityAnimation
       offsetAnimation:
       - time: 0.0
         offset: -0.3, -0.1
@@ -44,7 +44,6 @@
         scale: 1, -1
     0.1:
     - !type:WeaponArcAttack
-      damageGroup: pierce
       range: 0.7
       arcWidth: 40
 
@@ -59,7 +58,7 @@
     - !type:PlaySound
       sound:
         path: /Audio/_CE/Effects/Weapon/slash.ogg
-    - !type:ItemVisualEffect
+    - !type:EntityAnimation
       offsetAnimation:
       - time: 0.0
         offset: 0.3, -0.1
@@ -94,7 +93,6 @@
         scale: 1, 1
     0.1:
     - !type:WeaponArcAttack
-      damageGroup: pierce
       range: 0.7
       arcWidth: 40
 
@@ -108,7 +106,7 @@
     - !type:PlaySound
       sound:
         path: /Audio/_CE/Effects/Weapon/slash_sword1.ogg
-    - !type:ItemVisualEffect
+    - !type:EntityAnimation
       offsetAnimation:
       - time: 0.0
         offset: -0.9, -0.1
@@ -144,7 +142,6 @@
         scale: 1, -1
     0.2:
     - !type:WeaponArcAttack
-      damageGroup: default
       range: 0.6
       arcWidth: 180
 
@@ -157,7 +154,7 @@
     - !type:PlaySound
       sound:
         path: /Audio/_CE/Effects/Weapon/slash_sword1.ogg
-    - !type:ItemVisualEffect
+    - !type:EntityAnimation
       offsetAnimation:
       - time: 0.0
         offset: 0.9, -0.1
@@ -193,6 +190,5 @@
         scale: 1, 1
     0.2:
     - !type:WeaponArcAttack
-      damageGroup: default
       range: 0.6
       arcWidth: 180

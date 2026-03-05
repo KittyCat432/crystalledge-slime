@@ -45,15 +45,13 @@
     baseSprintSpeed: 1.5
   - type: CEWeapon
     spriteRotation: -90
+    damage:
+      types:
+        Physical: 2
     animations:
       Primary:
       - anim: FlemAttack1
       - anim: FlemAttack2
-  - type: CEMeleeWeapon
-    damageGroups:
-      default:
-        damage:
-          Physical: 2
 
 - type: htnCompound
   id: CEFlemCompound
@@ -169,7 +167,7 @@
     - !type:PlaySound
       sound:
         path: /Audio/_CE/Effects/Weapon/slash_sword2.ogg
-    - !type:ItemVisualEffect
+    - !type:EntityAnimation
       spriteOverride:
         sprite: _CE/Objects/Weapons/Skimitar/iron.rsi
         state: icon
@@ -228,7 +226,7 @@
     - !type:PlaySound
       sound:
         path: /Audio/_CE/Effects/Weapon/slash_sword2.ogg
-    - !type:ItemVisualEffect
+    - !type:EntityAnimation
       spriteOverride:
         sprite: _CE/Objects/Weapons/Skimitar/iron.rsi
         state: icon

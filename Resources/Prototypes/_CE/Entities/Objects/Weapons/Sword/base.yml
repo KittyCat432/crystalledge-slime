@@ -9,6 +9,9 @@
     size: Ginormous
   - type: CEWeapon
     spriteRotation: -90
+    damage:
+      types:
+        Physical: 2
     animations:
       Primary:
       - anim: SwordAttackLight1
@@ -24,11 +27,3 @@
     equipWhileMoving: true
     equipDelay: 1
     unequipDelay: 1
-  - type: CEMeleeWeapon
-    damageGroups:
-      default:
-        damage:
-          Physical: 2
-      pierce:
-        damage:
-          Physical: 2
