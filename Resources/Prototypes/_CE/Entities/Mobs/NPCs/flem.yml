@@ -9,20 +9,107 @@
   description: TODO
   categories: [ ForkFiltered ]
   components:
-  - type: HTN
-    rootTask:
-      task: CEFlemCompound
-    blackboard:
-      NavClimb: !type:Bool
-        true
-      NavSmash: !type:Bool
-        true
-      MaximumIdleTime: !type:Single
-        0
-      MinimumIdleTime: !type:Single
-        0
-      MeleeRange: !type:Single
-        1.5
+  - type: CEMagicEnergyContainer
+    maxEnergy: 100
+  - type: CEGOAP
+    planCooldown: 0.5
+
+    targetProviders:
+      enemy: !type:CEGOAPNearestHostileTargetProvider
+        visionRadius: 10
+      self: !type:CEGOAPSelfTargetProvider
+
+    goals:
+    # Buff self
+    - desiredState:
+        HasDivineShield: true
+      activationConditions:
+        HasDivineShield: false
+      priority: 4
+    # First - attack
+    - desiredState:
+        EnemyDead: true
+      activationConditions:
+        LowHealth: false
+        EnemyVisible: true
+      priority: 3
+    # Second - run away
+    - desiredState:
+        EnemyVisible: false
+      activationConditions:
+        LowHealth: true
+        EnemyVisible: true
+      priority: 2
+    # Last - healing
+    - desiredState:
+        LowHealth: false
+      activationConditions:
+        LowHealth: true
+        EnemyVisible: false
+      priority: 1
+
+    actions:
+    # Move to target
+    - !type:CEGOAPMoveToTargetAction
+      targetProviderKey: enemy
+      preconditions:
+        EnemyVisible: true
+      effects:
+        EnemyInMeleeRange: true
+      cost: 2
+      range: 1.5
+    # Attack target
+    - !type:CEGOAPMeleeAttackAction
+      targetProviderKey: enemy
+      preconditions:
+        EnemyInMeleeRange: true
+      effects:
+        EnemyDead: true
+      cost: 1
+      useType: Primary
+      angleVariation: 5
+    # Run away from target
+    - !type:CEGOAPFleeAction
+      targetProviderKey: enemy
+      effects:
+        EnemyVisible: false
+      cost: 1
+      fleeDistance: 15
+      visionRadius: 10
+      occlusionBonus: 2
+    # Divine Shield - self-target action, use when no shield active
+    - !type:CEGOAPUseAction
+      targetProviderKey: self
+      effects:
+        HasDivineShield: true
+      cost: 1
+      actionPrototype: CEActionSpellDivineShield
+    # Area Healing - world target under self, use when low health
+    - !type:CEGOAPUseAction
+      targetProviderKey: self
+      effects:
+        LowHealth: false
+      cost: 2
+      actionPrototype: CEActionSpellAreaHealing
+
+    sensors:
+    - !type:CEGOAPTargetExistsSensor
+      conditionKey: EnemyVisible
+      targetProviderKey: enemy
+    - !type:CEGOAPCheckHealthLevelSensor
+      conditionKey: LowHealth
+      threshold: 0.5
+    - !type:CEGOAPRangeToTargetSensor
+      conditionKey: EnemyInMeleeRange
+      targetProviderKey: enemy
+      range: 1.5
+    - !type:CEGOAPTargetIsDeadSensor
+      conditionKey: EnemyDead
+      targetProviderKey: enemy
+    - !type:CEGOAPHasStatusEffectSensor
+      conditionKey: HasDivineShield
+      statusEffect: CEStatusEffectDivineShield
+
   - type: NpcFactionMember
     factions:
     - SimpleHostile
@@ -41,8 +128,8 @@
           Dead: { state: dead }
   - type: MovementAlwaysTouching
   - type: MovementSpeedModifier
-    baseWalkSpeed: 1
-    baseSprintSpeed: 1.5
+    baseWalkSpeed: 3
+    baseSprintSpeed: 3.5
   - type: CEWeapon
     spriteRotation: -90
     damage:
@@ -52,111 +139,6 @@
       Primary:
       - anim: FlemAttack1
       - anim: FlemAttack2
-
-- type: htnCompound
-  id: CEFlemCompound
-  branches:
-    - tasks:
-        - !type:HTNPrimitiveTask #
-          operator: !type:UtilityOperator
-            proto: CENearbyMeleeTargets
-        - !type:HTNCompoundTask
-          task: CEMeleeAttackTargetCompound
-    - tasks:
-        - !type:HTNCompoundTask
-          task: CEIdleCompound
-
-- type: utilityQuery
-  id: CENearbyMeleeTargets
-  query:
-    - !type:NearbyHostilesQuery
-  considerations:
-    - !type:TargetIsAliveCon
-      curve: !type:BoolCurve
-    - !type:TargetDistanceCon
-      curve: !type:PresetCurve
-        preset: TargetDistance
-    - !type:TargetHealthCon
-      curve: !type:PresetCurve
-        preset: TargetHealth
-    - !type:TargetAccessibleCon
-      curve: !type:BoolCurve
-    - !type:TargetInLOSOrCurrentCon
-      curve: !type:BoolCurve
-
-# Tries to melee attack our target.
-- type: htnCompound
-  id: CEMeleeAttackTargetCompound
-  branches:
-    - preconditions:
-      - !type:KeyExistsPrecondition
-        key: Target
-      tasks:
-        - !type:HTNPrimitiveTask
-          operator: !type:MoveToOperator
-            shutdownState: PlanFinished
-            pathfindInPlanning: true
-            removeKeyOnFinish: false
-            targetKey: TargetCoordinates
-            pathfindKey: TargetPathfind
-            rangeKey: MeleeRange
-        - !type:HTNPrimitiveTask
-          operator: !type:CEMeleeAttackOperator
-            targetKey: Target
-            useType: Primary
-            rangeKey: MeleeRange
-          preconditions:
-            - !type:KeyExistsPrecondition
-              key: Target
-            - !type:TargetInRangePrecondition
-              targetKey: Target
-              rangeKey: MeleeRange
-          services:
-            - !type:UtilityService
-              id: MeleeService
-              proto: CENearbyMeleeTargets
-              key: Target
-
-# Picks a random location for the NPC to move to and idle.
-- type: htnCompound
-  id: CEIdleCompound
-  branches:
-    - tasks:
-        - !type:HTNPrimitiveTask
-          operator: !type:WaitOperator
-            key: IdleTime
-          preconditions:
-            - !type:KeyExistsPrecondition
-              key: IdleTime
-
-    # Pick a new spot and wait there.
-    - preconditions:
-        - !type:BuckledPrecondition
-          isBuckled: false
-        - !type:PulledPrecondition
-          isPulled: false
-      tasks:
-        - !type:HTNPrimitiveTask
-          operator: !type:PickAccessibleOperator
-            rangeKey: IdleRange
-
-        - !type:HTNPrimitiveTask
-          operator: !type:MoveToOperator
-            pathfindInPlanning: false
-
-        - !type:HTNPrimitiveTask
-          operator: !type:RandomOperator
-            targetKey: IdleTime
-            minKey: MinimumIdleTime
-            maxKey: MaximumIdleTime
-
-        - !type:HTNPrimitiveTask
-          operator: !type:WaitOperator
-            key: IdleTime
-          preconditions:
-            - !type:KeyExistsPrecondition
-              key: IdleTime
-
 
 - type: animationAction
   id: FlemAttack1
