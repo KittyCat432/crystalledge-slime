@@ -31,12 +31,13 @@
     animations:
       Primary:
       - anim: SpearAttackLight
-        staminaCost: 2
       Secondary:
       - anim: SpearAttackHeavy
-        staminaCost: 3
       - anim: SpearAttackHeavy2
-        staminaCost: 3
+  - type: CEWeaponStaminaCost
+    costs:
+      Primary: 2
+      Secondary: 3
   #- type: CEWieldedWeapon #TODO: Custom wielded animations
   #  animations:
   #    Primary:

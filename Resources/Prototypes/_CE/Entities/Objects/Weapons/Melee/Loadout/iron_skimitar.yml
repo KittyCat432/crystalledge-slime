@@ -30,12 +30,13 @@
     animations:
       Primary:
       - anim: SkimitarAttackLight1
-        staminaCost: 1
       - anim: SkimitarAttackLight2
-        staminaCost: 1
       Secondary:
       - anim: SkimitarAttackHeavy1
-        staminaCost: 2
+  - type: CEWeaponStaminaCost
+    costs:
+      Primary: 1
+      Secondary: 2
   - type: Clothing
     slots:
     - neck
