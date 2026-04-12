@@ -1,24 +1,25 @@
 - type: entity
-  id: CEWeaponSwordIron
-  parent:
-  - CEBaseWeapon
-  name: iron sword
-  description: A finely crafted sword favored by imperial officers. Its blade gleams with authority and tradition.
+  parent: [CEBaseWeapon, CEBaseWeaponDestructible]
+  id: CEWeaponHeavyClub
+  name: heavy club
+  description: TODO
   components:
   - type: Sprite
-    sprite: _CE/Objects/Weapons/Sword/iron.rsi
+    sprite: _CE/Objects/Weapons/heavy_club.rsi
     state: icon
+  - type: CEDestructible
+    destroyThreshold: 50
   - type: CEWeapon
     effectSlots:
       OnHit:
       - !type:WeaponArcAttack
-        range: 0.7
-        arcWidth: 40
+        range: 0.6
+        arcWidth: 60
         effects:
         - !type:Damage
           damage:
             types:
-              Physical: 2
+              Physical: 3
         - !type:Damage
           effectTarget: Used
           damage:
@@ -32,7 +33,7 @@
         - !type:Damage
           damage:
             types:
-              Physical: 2
+              Physical: 3
         - !type:Damage
           effectTarget: Used
           damage:
@@ -40,17 +41,19 @@
               Physical: 1
     animations:
       Primary:
-      - anim: SwordAttackLight1
-        staminaCost: 1
-      - anim: SwordAttackLight2
-        staminaCost: 1
+      - anim: StaffAttackLight1
+        staminaCost: 2
+        speed: 0.7
+      - anim: StaffAttackLight2
+        staminaCost: 2
+        speed: 0.7
       Secondary:
       - anim: SwordAttackHeavy1
-        speed: 1.2
-        staminaCost: 1
+        staminaCost: 3
+        speed: 0.7
       - anim: SwordAttackHeavy2
-        speed: 1.2
-        staminaCost: 1
+        staminaCost: 3
+        speed: 0.7
   - type: Clothing
     slots:
     - neck

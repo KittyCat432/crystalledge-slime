@@ -1,11 +1,11 @@
 - type: entity
   parent: CEBaseWeapon
-  id: CEWeaponMagicStaffFire
-  name: fire staff
-  description: A staff imbued with fire magic. Launches fiery projectiles at enemies.
+  id: CEWeaponMagicStaffIce
+  name: ice staff
+  description: A staff imbued with ice magic. Launches freezing projectiles at enemies.
   components:
   - type: Sprite
-    sprite: _CE/Objects/Weapons/Staff/fire_staff.rsi
+    sprite: _CE/Objects/Weapons/Staff/ice_staff.rsi
     layers:
     - state: icon
     - state: orb
@@ -14,24 +14,14 @@
     effectSlots:
       OnHit:
       - !type:ShootProjectile
-        prototype: CEProjectileMagicFire
+        prototype: CEProjectileMagicIce
         projectileSpeed: 10
-      - !type:Damage
-        effectTarget: Used
-        damage:
-          types:
-            Physical: 1
       OnHeavyHit:
       - !type:WeaponArcAttack
         range: 0.78
         arcWidth: 45
         effects:
         - !type:Damage
-          damage:
-            types:
-              Physical: 1
-        - !type:Damage
-          effectTarget: Used
           damage:
             types:
               Physical: 1
@@ -50,18 +40,18 @@
   - type: Wieldable
 
 - type: entity
-  id: CEProjectileMagicFire
-  name: fire bolt
+  id: CEProjectileMagicIce
+  name: ice bolt
   parent: BaseBullet
   categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
-    sprite: _CE/Effects/fire_status.rsi
+    sprite: _CE/Effects/cold_slowdown_status.rsi
     layers:
     - state: effect
       shader: unshaded
   - type: PointLight
-    color: "#ff9603"
+    color: "#30caf5"
     radius: 1.5
     energy: 3.0
   - type: CEProjectile
@@ -69,4 +59,4 @@
     - !type:Damage
       damage:
         types:
-          Fire: 1
+          Cold: 1

@@ -1,5 +1,5 @@
 - type: entity
-  parent: CEBaseWeapon
+  parent: [CEBaseWeapon, CEBaseWeaponDestructible]
   id: CEWeaponMagicStaffWater
   name: water staff
   description: A staff imbued with water magic. Launches slow water orbs that drench and repel their target.

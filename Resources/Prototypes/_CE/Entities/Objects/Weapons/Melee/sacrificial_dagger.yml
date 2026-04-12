@@ -1,5 +1,5 @@
 - type: entity
-  parent: CEBaseWeapon
+  parent: [CEBaseWeapon, CEBaseWeaponDestructible]
   id: CEWeaponDaggerSacrificial
   name: sacrificial dagger
   description: An enchanted dagger that restores mana to whoever it cuts.

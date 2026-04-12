@@ -1,42 +1,30 @@
 - type: entity
-  id: CEWeaponSwordBone
+  id: CEWeaponSwordIron
   parent:
   - CEBaseWeapon
-  name: bone sword
-  description: A serrated sword forged from the spine of a reckless adventurer
+  name: iron sword
+  description: A finely crafted sword favored by imperial officers. Its blade gleams with authority and tradition.
   components:
   - type: Sprite
-    sprite: _CE/Objects/Weapons/Sword/bone.rsi
+    sprite: _CE/Objects/Weapons/Sword/iron.rsi
     state: icon
-  - type: CEDestructible
-    destroyThreshold: 40
   - type: CEWeapon
     effectSlots:
       OnHit:
       - !type:WeaponArcAttack
         range: 0.7
-        arcWidth: 20
+        arcWidth: 40
         effects:
         - !type:Damage
           damage:
             types:
-              Physical: 3
-        - !type:Damage
-          effectTarget: Used
-          damage:
-            types:
-              Physical: 1
+              Physical: 2
       OnHeavyHit:
       - !type:WeaponArcAttack
-        range: 1.1
-        arcWidth: 15
+        range: 0.6
+        arcWidth: 180
         effects:
         - !type:Damage
-          damage:
-            types:
-              Physical: 4
-        - !type:Damage
-          effectTarget: Used
           damage:
             types:
               Physical: 2
@@ -47,9 +35,12 @@
       - anim: SwordAttackLight2
         staminaCost: 1
       Secondary:
-      - anim: SpearAttackHeavy2
+      - anim: SwordAttackHeavy1
         speed: 1.2
-        staminaCost: 2
+        staminaCost: 1
+      - anim: SwordAttackHeavy2
+        speed: 1.2
+        staminaCost: 1
   - type: Clothing
     slots:
     - neck
