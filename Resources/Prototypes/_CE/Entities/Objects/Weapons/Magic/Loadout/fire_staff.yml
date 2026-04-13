@@ -25,11 +25,6 @@
           damage:
             types:
               Physical: 5
-        - !type:Damage
-          effectTarget: Used
-          damage:
-            types:
-              Physical: 1
     animations:
       Primary:
       - anim: StaffAttackLight1

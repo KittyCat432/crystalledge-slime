@@ -19,12 +19,6 @@
           damage:
             types:
               Physical: 20
-        - !type:Damage
-          effectTarget: Used
-          damage:
-            types:
-              Physical: 1
-              Physical: 4
       OnHeavyHit:
       - !type:WeaponArcAttack
         range: 0.72
@@ -34,12 +28,6 @@
           damage:
             types:
               Physical: 20
-        - !type:Damage
-          effectTarget: Used
-          damage:
-            types:
-              Physical: 1
-              Physical: 4
     animations:
       Primary:
       - anim: SwordAttackLight1
