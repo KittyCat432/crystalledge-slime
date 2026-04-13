@@ -24,6 +24,11 @@
         - !type:Damage
           damage:
             types:
+              Physical: 5
+        - !type:Damage
+          effectTarget: Used
+          damage:
+            types:
               Physical: 1
     animations:
       Primary:
@@ -60,4 +65,4 @@
     - !type:Damage
       damage:
         types:
-          Fire: 1
+          Fire: 5

@@ -86,7 +86,7 @@ public abstract class CESharedWaterSystem : EntitySystem
 
         if (args.MaxStacks != null)
         {
-            var current = _stack.GetFlammableStack(ent, ent.Comp.StatusEffect);
+            var current = _stack.GetStack(ent, ent.Comp.StatusEffect);
             var allowed = Math.Max(0, args.MaxStacks.Value - current);
             if (allowed <= 0)
                 return;
@@ -124,7 +124,7 @@ public abstract class CESharedWaterSystem : EntitySystem
         if (args.Cancelled)
             return;
 
-        var wetStacks = _stack.GetFlammableStack(ent, ent.Comp.StatusEffect);
+        var wetStacks = _stack.GetStack(ent, ent.Comp.StatusEffect);
         if (wetStacks <= 0)
             return;
 
@@ -249,7 +249,7 @@ public abstract class CESharedWaterSystem : EntitySystem
                 var normalizedDistance = distance / radius;
                 var stacks = (int)MathF.Ceiling((1f - MathF.Pow(normalizedDistance, falloffFactor)) * maxStacks);
 
-                WetTile((gridUid, grid), tileCoords, Math.Max(1, stacks), stacks, null, playSound: false);
+                WetTile((gridUid, grid), tileCoords, Math.Max(1, stacks), stacks, playSound: false);
             }
         }
 
@@ -261,7 +261,7 @@ public abstract class CESharedWaterSystem : EntitySystem
     /// <summary>
     /// Checks if an entity is standing on a tile that contains a water entity.
     /// </summary>
-    protected bool IsOnWater(Entity<TransformComponent> ent)
+    private bool IsOnWater(Entity<TransformComponent> ent)
     {
         var xform = ent.Comp;
         if (xform.GridUid is not { } gridUid || !TryComp<MapGridComponent>(gridUid, out var grid))

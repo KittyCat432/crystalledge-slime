@@ -18,6 +18,12 @@
         - !type:Damage
           damage:
             types:
+              Physical: 10
+        - !type:Damage
+          effectTarget: Used
+          damage:
+            types:
+              Physical: 1
               Physical: 2
       OnHeavyHit:
       - !type:WeaponArcAttack
@@ -28,6 +34,12 @@
           damage:
             types:
               Physical: 4
+              Physical: 20
+        - !type:Damage
+          effectTarget: Used
+          damage:
+            types:
+              Physical: 1
     animations:
       Primary:
       - anim: SpearAttackLight

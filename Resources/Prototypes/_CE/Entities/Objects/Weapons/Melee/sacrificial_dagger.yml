@@ -21,7 +21,7 @@
           ignoreArmor: true
           damage:
             types:
-              Physical: 1
+              Physical: 10
         - !type:Damage
           effectTarget: Used
           damage:
@@ -43,7 +43,7 @@
         ignoreArmor: true
         damage:
           types:
-            Physical: 2
+            Physical: 10
       - !type:RestoreMana
         effectTarget: User
         amount: 3

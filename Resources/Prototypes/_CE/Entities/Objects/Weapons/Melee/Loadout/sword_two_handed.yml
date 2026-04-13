@@ -18,6 +18,12 @@
         - !type:Damage
           damage:
             types:
+              Physical: 20
+        - !type:Damage
+          effectTarget: Used
+          damage:
+            types:
+              Physical: 1
               Physical: 4
       OnHeavyHit:
       - !type:WeaponArcAttack
@@ -27,6 +33,12 @@
         - !type:Damage
           damage:
             types:
+              Physical: 20
+        - !type:Damage
+          effectTarget: Used
+          damage:
+            types:
+              Physical: 1
               Physical: 4
     animations:
       Primary:

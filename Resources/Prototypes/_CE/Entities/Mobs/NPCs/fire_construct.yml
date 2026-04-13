@@ -11,7 +11,7 @@
   components:
   - type: CEGOAPAlarm
   - type: CEDestructible
-    destroyThreshold: 30
+    destroyThreshold: 150
   - type: CEMagicEnergyContainer
     energy: 100
     baseMaxEnergy: 100
@@ -95,7 +95,7 @@
   - type: CEArmor
     flat:
       Fire: 100
-      Physical: 1
+      Physical: 5
   - type: FootstepModifier
     footstepSoundCollection:
       collection: FootstepThud
@@ -141,7 +141,7 @@
     - !type:IgniteArea
       radius: 3
       fallOffFactor: 0.5
-      maxStacks: 5
+      maxStacks: 8
     - !type:Dash
       distance: 3
 
@@ -218,10 +218,10 @@
     - !type:Damage
       damage:
         types:
-          Fire: 1
+          Fire: 5
     - !type:IgniteArea
       radius: 2
-      maxStacks: 2
+      maxStacks: 5
     - !type:SpawnEntity
       effectTarget: Target
       spawns:
