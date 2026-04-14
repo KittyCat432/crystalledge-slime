@@ -92,7 +92,7 @@ public sealed class CEHealthStatusControl : Control
             MaxValue = 1,
             Value = 0,
         };
-        _progress.SetWidth = 100f;
+        _progress.SetWidth = 70f;
         _progress.SetHeight = 10f;
         _progress.ForegroundStyleBoxOverride = new StyleBoxFlat(Color.FromHex("#c23030"));
         _progress.BackgroundStyleBoxOverride = new StyleBoxFlat(Color.FromHex("#010c13"));
