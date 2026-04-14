@@ -24,6 +24,7 @@
     - id: CEWeaponDaggerSacrificial
     - id: CEWeaponMagicStaffHealing
     - id: CEWeaponSwordBone
+    - id: CEWeaponSpearSoulCatcher
 
 - type: entityTable
   id: CERandomWeapon

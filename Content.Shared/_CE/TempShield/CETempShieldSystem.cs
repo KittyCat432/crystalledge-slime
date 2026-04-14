@@ -4,6 +4,7 @@ using Content.Shared._CE.StatusEffectStacks;
 using Content.Shared.Inventory;
 using Content.Shared.StatusEffectNew;
 using Content.Shared.StatusEffectNew.Components;
+using Robust.Shared.Network;
 using Robust.Shared.Prototypes;
 
 namespace Content.Shared._CE.TempShield;
@@ -11,12 +12,21 @@ namespace Content.Shared._CE.TempShield;
 public sealed class CETempShieldSystem : EntitySystem
 {
     [Dependency] private readonly CEStatusEffectStackSystem _stacks = default!;
+    [Dependency] private readonly INetManager _net = default!;
+    [Dependency] private readonly SharedTransformSystem _transform = default!;
 
-    private static readonly Dictionary<string, EntProtoId> ShieldEffects = new()
+    private static readonly Dictionary<ProtoId<CEDamageTypePrototype>, EntProtoId> ShieldEffects = new()
     {
         { "Physical", "CEStatusEffectTempShield" },
-        { "Fire", "CEStatusEffectTempShieldFire" },
-        { "Cold", "CEStatusEffectTempShieldCold" },
+        { "Fire",     "CEStatusEffectTempShieldFire" },
+        { "Cold",     "CEStatusEffectTempShieldCold" },
+    };
+
+    private static readonly Dictionary<ProtoId<CEDamageTypePrototype>, EntProtoId> AddEffects = new()
+    {
+        { "Physical", "CEEffectAddTempShieldPhysical" },
+        { "Fire",     "CEEffectAddTempShieldFire" },
+        { "Cold",     "CEEffectAddTempShieldFrost" },
     };
 
     public override void Initialize()
@@ -24,6 +34,19 @@ public sealed class CETempShieldSystem : EntitySystem
         base.Initialize();
 
         SubscribeLocalEvent<CETempShieldStatusEffectComponent, StatusEffectRelayedEvent<CEDamageCalculateEvent>>(OnBeforeDamage);
+        SubscribeLocalEvent<CETempShieldStatusEffectComponent, StatusEffectRemovedEvent>(OnRemoved);
+    }
+
+    private void OnRemoved(Entity<CETempShieldStatusEffectComponent> ent, ref StatusEffectRemovedEvent args)
+    {
+        if (!_net.IsServer) //TODO: Fix prediction
+            return;
+
+        if (!TryComp<StatusEffectComponent>(ent, out var statusEffect) || statusEffect.AppliedTo is null)
+            return;
+
+        var vfx = Spawn(ent.Comp.BreakEffect, Transform(statusEffect.AppliedTo.Value).Coordinates);
+        _transform.SetParent(vfx, statusEffect.AppliedTo.Value);
     }
 
     private static readonly TimeSpan DefaultCycleDuration = TimeSpan.FromSeconds(10);
@@ -54,6 +77,12 @@ public sealed class CETempShieldSystem : EntitySystem
 
         if (!_stacks.TryAddStack(target, statusEffect, out _, stacks, DefaultCycleDuration))
             return false;
+
+        if (_net.IsServer && AddEffects.TryGetValue(damageType, out var effectProto))
+        {
+            var vfx = Spawn(effectProto, Transform(target).Coordinates);
+            _transform.SetParent(vfx, target);
+        }
 
         _stacks.SetStackDelta(target, statusEffect, -1);
         return true;
@@ -106,6 +135,13 @@ public sealed class CETempShieldSystem : EntitySystem
         stacksConsumed = Math.Min(stacksConsumed, currentStacks);
 
         _stacks.TryRemoveStack(ent.Owner, stacksConsumed);
+
+
+        if (_net.IsServer && stacksConsumed != currentStacks) //TODO: Fix prediction
+        {
+            var vfx = Spawn(ent.Comp.TakeDamageEffect, Transform(statusEffect.AppliedTo.Value).Coordinates);
+            _transform.SetParent(vfx, statusEffect.AppliedTo.Value);
+        }
 
         if (newDamage.Total <= 0)
             args.Args.Cancelled = true;

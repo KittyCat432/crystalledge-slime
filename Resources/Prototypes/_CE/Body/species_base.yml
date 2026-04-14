@@ -56,6 +56,8 @@
         type: HumanoidMarkingModifierBoundUserInterface
       enum.StrippingUiKey.Key:
         type: StrippableBoundUserInterface
+      enum.CERememberNameUiKey.Key:
+        type: CEIdentityRecognitionBoundUserInterface
   - type: Stripping
   - type: Puller
   - type: Speech
@@ -77,6 +79,7 @@
   - type: Tag
     tags:
     - FootstepSound
+  - type: CEUnknownIdentity
   - type: WarpPoint
     follow: true
   - type: CEBlinker

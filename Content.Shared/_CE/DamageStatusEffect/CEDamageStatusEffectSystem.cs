@@ -1,7 +1,10 @@
 using Content.Shared._CE.DamageStatusEffect.Components;
 using Content.Shared._CE.Health;
+using Content.Shared._CE.Regeneration;
 using Content.Shared._CE.StatusEffectStacks;
 using Content.Shared.StatusEffectNew.Components;
+
+namespace Content.Shared._CE.DamageStatusEffect;
 
 public sealed partial class CEDamageStatusEffectSystem : EntitySystem
 {
@@ -11,19 +14,14 @@ public sealed partial class CEDamageStatusEffectSystem : EntitySystem
     {
         base.Initialize();
 
-        SubscribeLocalEvent<CEDamageStatusEffectComponent, CEStatusEffectStackEffectEvent>(OnEffect);
+        SubscribeLocalEvent<CEDamageStatusEffectComponent, CEStatusEffectStackEffectEvent>(OnDamage);
     }
 
-    private void OnEffect(Entity<CEDamageStatusEffectComponent> ent, ref CEStatusEffectStackEffectEvent args)
-    {
-        Damage(ent, args.Stack);
-    }
-
-    private void Damage(Entity<CEDamageStatusEffectComponent> ent, int stack)
+    private void OnDamage(Entity<CEDamageStatusEffectComponent> ent, ref CEStatusEffectStackEffectEvent args)
     {
         if (!TryComp<StatusEffectComponent>(ent, out var effect) || effect.AppliedTo is null)
             return;
 
-        _damageable.TakeDamage(effect.AppliedTo.Value, ent.Comp.Damage * stack, interruptDoAfters: ent.Comp.InterruptDoAfters);
+        _damageable.TakeDamage(effect.AppliedTo.Value, ent.Comp.Damage * args.Stack, interruptDoAfters: ent.Comp.InterruptDoAfters);
     }
 }
