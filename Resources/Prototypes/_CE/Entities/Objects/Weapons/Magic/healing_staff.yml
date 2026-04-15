@@ -78,7 +78,7 @@
   - type: CEProjectile
     hitEffects:
     - !type:Heal
-      amount: 1
+      amount: 5
     - !type:SpawnEntity
       spawns:
       - CEEffectHealingGeneric

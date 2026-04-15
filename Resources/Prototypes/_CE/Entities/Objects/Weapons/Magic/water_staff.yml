@@ -82,7 +82,7 @@
     - !type:Damage
       damage:
         types:
-          Physical: 10
+          Physical: 15
     - !type:AreaEffect
       affectCaster: true
       range: 2
