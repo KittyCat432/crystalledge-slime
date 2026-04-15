@@ -35,10 +35,10 @@
       weight: 1
     - !type:NestedSelector
       tableId: CEUncommonWeapon
-      weight: 0.5
+      weight: 0.75
     - !type:NestedSelector
       tableId: CELoadoutWeapon
-      weight: 0.25
+      weight: 0.5
 
 - type: entity
   id: CESpawnerRandomWeapon

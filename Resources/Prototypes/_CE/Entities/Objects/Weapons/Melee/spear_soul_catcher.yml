@@ -1,7 +1,6 @@
 - type: entity
   id: CEWeaponSpearSoulCatcher
-  parent:
-  - CEBaseWeapon
+  parent: [CEBaseWeapon, CEBaseWeaponDestructible]
   name: soul catcher
   description: A rare magical weapon that does not deal physical damage but wounds the soul, draining mana from it and transferring it to the wielder
   components:
@@ -48,18 +47,19 @@
     animations:
       Primary:
       - anim: SpearAttackLight
-        staminaCost: 2
       Secondary:
       - anim: SpearAttackHeavy
-        staminaCost: 3
       - anim: SpearAttackHeavy2
-        staminaCost: 3
   #- type: CEWieldedWeapon #TODO: Custom wielded animations
   #  animations:
   #    Primary:
   #    - anim: SpearAttackLight
   #    Secondary:
   #    - anim: SpearAttackHeavy
+  - type: CEWeaponStaminaCost
+    costs:
+      Primary: 2
+      Secondary: 3
   - type: Wieldable
   - type: Clothing
     slots:
