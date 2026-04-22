@@ -1,0 +1,123 @@
+- type: entity
+  id: CEConsumableManaMoteBase
+  parent: BaseItem
+  name: mana mote
+  description: TODO
+  categories: [ ForkFiltered ]
+  abstract: true
+  components:
+  - type: Sprite
+    sprite: _CE/Objects/Consumable/Potions/small_bottle.rsi #TODO replace later
+    layers:
+    - state: icon
+  - type: Item
+    size: Tiny
+  - type: CEConsumable
+    whitelist:
+      components:
+      - CEMobState
+    useDelay: 0.25
+    useSound:
+      path: /Audio/Items/drink.ogg #TODO replace later
+  - type: TimedDespawn
+    lifetime: 30
+
+- type: entity
+  id: CEConsumableManaMoteTiny
+  parent: CEConsumableManaMoteBase
+  name: tiny mana mote
+  components:
+#  - type: Sprite
+#    layers:
+#    - state: tiny
+  - type: CEConsumable
+    effects:
+    - !type:RestoreMana
+      amount: 1
+    - !type:SpawnEntity
+      spawns:
+      - CEEffectManaRestore
+  - type: PointLight
+    color: "#1f36b6"
+    radius: 1.1
+    energy: 15
+
+- type: entity
+  id: CEConsumableManaMoteSmall
+  parent: CEConsumableManaMoteBase
+  name: small mana mote
+  components:
+#  - type: Sprite
+#    layers:
+#    - state: small
+  - type: CEConsumable
+    effects:
+    - !type:RestoreMana
+      amount: 2
+    - !type:SpawnEntity
+      spawns:
+      - CEEffectManaRestore
+  - type: PointLight
+    color: "#1f36b6"
+    radius: 1.2
+    energy: 20
+
+- type: entity
+  id: CEConsumableManaMoteMedium
+  parent: CEConsumableManaMoteBase
+  name: medium mana mote
+  components:
+#  - type: Sprite
+#    layers:
+#    - state: Medium
+  - type: CEConsumable
+    effects:
+    - !type:RestoreMana
+      amount: 3
+    - !type:SpawnEntity
+      spawns:
+      - CEEffectManaRestore
+  - type: PointLight
+    color: "#1f36b6"
+    radius: 1.3
+    energy: 25
+
+- type: entity
+  id: CEConsumableManaMoteLarge
+  parent: CEConsumableManaMoteBase
+  name: large mana mote
+  components:
+#  - type: Sprite
+#    layers:
+#    - state: large
+  - type: CEConsumable
+    effects:
+    - !type:RestoreMana
+      amount: 4
+    - !type:SpawnEntity
+      spawns:
+      - CEEffectManaRestore
+  - type: PointLight
+    color: "#1f36b6"
+    radius: 1.4
+    energy: 30
+
+- type: entity
+  id: CEConsumableManaMoteHuge
+  parent: CEConsumableManaMoteBase
+  name: huge mana mote
+  components:
+#  - type: Sprite
+#    layers:
+#    - state: huge
+  - type: CEConsumable
+    effects:
+    - !type:RestoreMana
+      amount: 5
+    - !type:SpawnEntity
+      spawns:
+      - CEEffectManaRestore
+  - type: PointLight
+    color: "#1f36b6"
+    radius: 1.5
+    energy: 35

@@ -10,6 +10,13 @@
   categories: [ ForkFiltered ]
   components:
   - type: CEGOAPAlarm
+  - type: CEDestructible
+    lootTable: !type:AllSelector
+      children:
+      - !type:NestedSelector
+        tableId: CEManaMoteMedium
+        amount: 1
+        prob: 0.5
   - type: CEMagicEnergyContainer
     energy: 100
     baseMaxEnergy: 100

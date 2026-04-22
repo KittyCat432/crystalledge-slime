@@ -20,6 +20,10 @@
       children:
       - id: CECoinCopper1
         amount: 1
+      - !type:NestedSelector
+        tableId: CEManaMoteSmall
+        amount: 1
+        prob: 0.5
   - type: CEGOAP
     goals:
     # Single stupid goal - kill enemies

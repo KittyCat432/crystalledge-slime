@@ -12,6 +12,12 @@
   - type: CEGOAPAlarm
   - type: CEDestructible
     destroyThreshold: 150
+    lootTable: !type:AllSelector
+      children:
+      - !type:NestedSelector
+        tableId: CEManaMoteLarge
+        amount: 1
+        prob: 0.5
   - type: CEMagicEnergyContainer
     energy: 100
     baseMaxEnergy: 100

@@ -21,6 +21,10 @@
       - id: CEConsumableSlimeCoreFire
         amount: 1
         prob: 0.75
+      - !type:NestedSelector
+        tableId: CEManaMoteMedium
+        amount: 1
+        prob: 0.5
   - type: CEDestructionEffect
     effects:
     - !type:IgniteArea

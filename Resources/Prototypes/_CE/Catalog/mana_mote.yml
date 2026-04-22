@@ -1,0 +1,27 @@
+- type: entityTable
+  id: CEManaMoteSmall
+  table: !type:GroupSelector
+    children:
+    - id: CEConsumableManaMoteTiny
+    - id: CEConsumableManaMoteSmall
+      weight: 0.5
+
+- type: entityTable
+  id: CEManaMoteMedium
+  table: !type:GroupSelector
+    children:
+    - id: CEConsumableManaMoteTiny
+      weight: 0.25
+    - id: CEConsumableManaMoteSmall
+    - id: CEConsumableManaMoteMedium
+      weight: 0.75
+
+- type: entityTable
+  id: CEManaMoteLarge
+  table: !type:GroupSelector
+    children:
+    - id: CEConsumableManaMoteMedium
+      weight: 0.25
+    - id: CEConsumableManaMoteLarge
+    - id: CEConsumableManaMoteHuge
+      weight: 0.5
