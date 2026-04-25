@@ -7,9 +7,10 @@
   abstract: true
   components:
   - type: Sprite
-    sprite: _CE/Objects/Consumable/Potions/small_bottle.rsi #TODO replace later
+    sprite: _CE/Objects/Consumable/manamotes.rsi
     layers:
-    - state: icon
+    - state: small
+      color: "#1f36b6"
   - type: Item
     size: Tiny
   - type: CEConsumable
@@ -18,7 +19,7 @@
       - CEMobState
     useDelay: 0.25
     useSound:
-      path: /Audio/Items/drink.ogg #TODO replace later
+      path: /Audio/_CE/Effects/critical.ogg #TODO replace later
   - type: TimedDespawn
     lifetime: 30
 

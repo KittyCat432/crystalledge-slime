@@ -28,6 +28,10 @@
       - id: CEMobSlimeWater
         amount: 1
         prob: 0.25
+      - !type:NestedSelector
+        tableId: CEManaMoteMedium
+        amount: 1
+        prob: 0.5
   - type: CEDestructionEffect
     effects:
     - !type:WetArea
