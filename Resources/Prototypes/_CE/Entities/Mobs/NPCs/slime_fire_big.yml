@@ -30,7 +30,6 @@
         prob: 0.25
       - !type:NestedSelector
         tableId: CEManaMoteLarge
-        amount: 1
         prob: 0.5
   - type: CEDestructionEffect
     effects:

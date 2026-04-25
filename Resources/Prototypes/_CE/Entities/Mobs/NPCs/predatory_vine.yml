@@ -16,7 +16,6 @@
       children:
       - !type:NestedSelector
         tableId: CEManaMoteSmall
-        amount: 1
         prob: 0.5
   - type: CEGOAP
     goals:

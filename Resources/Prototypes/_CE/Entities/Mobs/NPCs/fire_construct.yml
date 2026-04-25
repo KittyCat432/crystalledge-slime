@@ -15,7 +15,6 @@
       children:
       - !type:NestedSelector
         tableId: CEManaMoteLarge
-        amount: 1
         prob: 0.5
   - type: CEMagicEnergyContainer
     energy: 100
