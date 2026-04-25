@@ -90,7 +90,10 @@ public sealed class CEDestructibleSystem : EntitySystem
         else if (xform.MapUid != null)
             position = new EntityCoordinates(xform.MapUid.Value, _transform.GetWorldPosition(xform));
         else
+        {
+            PredictedQueueDel(uid);
             return;
+        }
 
         if (comp.DestroySound is not null && _net.IsServer)
             _audio.PlayPvs(comp.DestroySound, xform.Coordinates);

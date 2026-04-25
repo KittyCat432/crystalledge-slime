@@ -95,18 +95,19 @@ public sealed partial class CEWorkbenchSystem : EntitySystem
             if (!_proto.Resolve(recipeId, out var indexedRecipe))
                 continue;
 
-            // Only show recipes the current user knows (if they have knowledge tracking)
+            // Only show recipes the current user knows (if they have knowledge tracking),
+            // unless the recipe is marked as roundstart (available without learning).
             if (entity.Comp.CurrentUser is null)
                 continue;
 
-            if (!_recipeKnowledge.KnowsRecipe(entity.Comp.CurrentUser.Value, recipeId))
+            if (!indexedRecipe.RoundStart && !_recipeKnowledge.KnowsRecipe(entity.Comp.CurrentUser.Value, recipeId))
                 continue;
 
             var canCraft = true;
 
             foreach (var requirement in indexedRecipe.Requirements)
             {
-                if (!requirement.CheckRequirement(EntityManager, _proto, resources))
+                if (!requirement.CheckRequirement(EntityManager, _proto, resources, entity.Comp.CurrentUser.Value))
                 {
                     canCraft = false;
                     break;
@@ -123,13 +124,13 @@ public sealed partial class CEWorkbenchSystem : EntitySystem
 
     private bool CanCraftRecipe(CEWorkbenchRecipePrototype recipe, HashSet<EntityUid> entities, EntityUid? user = null)
     {
-        // Validate the user knows the recipe (server-side)
-        if (user is { } u && !_recipeKnowledge.KnowsRecipe(u, recipe.ID))
+        // Validate the user knows the recipe (server-side), unless it is roundstart.
+        if (!recipe.RoundStart && user is { } u && !_recipeKnowledge.KnowsRecipe(u, recipe.ID))
             return false;
 
         foreach (var req in recipe.Requirements)
         {
-            if (!req.CheckRequirement(EntityManager, _proto, entities))
+            if (!req.CheckRequirement(EntityManager, _proto, entities, user))
                 return false;
         }
 
@@ -137,33 +138,13 @@ public sealed partial class CEWorkbenchSystem : EntitySystem
     }
 
     /// <summary>
-    /// Checks recipe conditions and triggers failure effects.
-    /// </summary>
-    /// <returns>True if all conditions pass, otherwise false.</returns>
-    private bool CheckRecipeConditions(CEWorkbenchRecipePrototype recipe, EntityUid workbench, EntityUid? user)
-    {
-        var passConditions = true;
-        foreach (var condition in recipe.Conditions)
-        {
-            if (!condition.CheckCondition(EntityManager, _proto, workbench, user))
-            {
-                condition.FailedEffect(EntityManager, _proto, workbench, user);
-                passConditions = false;
-            }
-            condition.PostCraft(EntityManager, _proto, workbench, user);
-        }
-
-        return passConditions;
-    }
-
-    /// <summary>
     /// Consumes resources required for crafting.
     /// </summary>
-    private void ConsumeRecipeResources(CEWorkbenchRecipePrototype recipe, HashSet<EntityUid> resources)
+    private void ConsumeRecipeResources(CEWorkbenchRecipePrototype recipe, HashSet<EntityUid> resources, EntityUid? user)
     {
         foreach (var req in recipe.Requirements)
         {
-            req.PostCraft(EntityManager, _proto, resources);
+            req.PostCraft(EntityManager, _proto, resources, user);
         }
     }
 

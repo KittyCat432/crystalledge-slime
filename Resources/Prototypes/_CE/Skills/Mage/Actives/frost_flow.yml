@@ -10,12 +10,11 @@
   name: Frost Flow
   description: You unleash a stream of frost that covers the ground in [color=#30caf5]ice[/color] and [color=#30caf5]slows[/color] creatures caught in it.
   components:
-  - type: CEActionDangerous
   - type: CEVisualizeWideLineAction
     width: 2.5
     projectileMode: true
   - type: CEActionManaCost
-    manaCost: 4
+    manaCost: 5
   - type: Action
     useDelay: 8
     icon:
@@ -143,10 +142,6 @@
     frequency: 0.2
     firstDelay: 0.3 # Important to not affect caster, freeze and damage it immediately on spawn
     effects:
-    - !type:FreezeArea
-      radius: 1.5
-      maxStacks: 6
-      fallOffFactor: 1
     - !type:AreaEffect
       affectCaster: true
       range: 1.2
@@ -155,4 +150,8 @@
         attackType: Ranged
         damage:
           types:
-            Cold: 25
+            Cold: 10
+    - !type:FreezeArea
+      radius: 1.5
+      maxStacks: 10
+      fallOffFactor: 1

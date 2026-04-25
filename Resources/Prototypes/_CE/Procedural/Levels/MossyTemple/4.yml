@@ -1,0 +1,96 @@
+- type: dungeonLevel
+  id: MossyTemple4
+  parent:
+  - BaseMossyTemplePostProcessPeaceful
+  name: ce-dungeon-mossy-temple-4-name
+  uiPosition: 10,0
+  exits:
+    1: Arena
+  config:
+    !type:CEProceduralConfig
+    components:
+    - type: CEMapStatusEffects
+      effects:
+      - CEStatusEffectPacifism
+    generalCount:
+      min: 15
+      max: 20
+    blessingCount:
+      min: 0
+      max: 0
+    treasureCount:
+      min: 0
+      max: 2
+    cycleCount:
+      min: 10
+      max: 10
+    entranceCount:
+      min: 2
+      max: 3
+  postProcess:
+
+  # MOBS #X2 enemies compared to PvP version
+  - !type:CEBudgetSpawnPostProcess
+    budget: 100
+    wakeOnSpawn: true
+    excludedRoomTypes:
+    - Entrance
+    entries:
+    - proto: CEMobSlimeFire
+      cost: 3
+    - proto: CEMobFlem
+      cost: 3
+    - proto: CEMobFlem2
+      cost: 3
+    - proto: CEMobFlem3
+      cost: 5
+    - proto: CEMobFireConstruct
+      cost: 10
+    - proto: CEMobPredatoryVine
+      cost: 3
+    - proto: CEMobSlimeFireBig
+      cost: 8
+    - proto: CEMobSlimeWaterBig
+      cost: 2
+
+  #LOOT
+  - !type:CEBudgetSpawnPostProcess # 5 Herbs
+    budget: 5
+    tileWhitelist:
+    - CEDirt
+    - CEGrass
+    - CEGrassLight
+    - CEGrassTall
+    entries:
+    - proto: CESpawnerRandomFlowers
+      cost: 1
+  - !type:CEBudgetSpawnPostProcess #1 Key
+    budget: 1
+    anchoredWhitelist:
+      components:
+      - PlaceableSurface
+    entries:
+    - proto: CEIronKey
+      cost: 1
+  - !type:CEBudgetSpawnPostProcess #Guaranteed Healing
+    budget: 25
+    anchoredWhitelist:
+      components:
+      - PlaceableSurface
+    entries:
+    - proto: CEConsumablePotionRegeneration
+      cost: 20
+    - proto: CEConsumablePotionHealingSmall
+      cost: 25
+    - proto: CEConsumablePotionHealingMedium
+      cost: 50
+  - !type:CEBudgetSpawnPostProcess #Guaranteed Mana
+    budget: 5
+    anchoredWhitelist:
+      components:
+      - PlaceableSurface
+    entries:
+    - proto: CEConsumablePotionManaSmall
+      cost: 5
+    - proto: CEConsumablePotionManaMedium
+      cost: 10

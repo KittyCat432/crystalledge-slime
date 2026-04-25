@@ -1,9 +1,6 @@
 - type: skill
   parent: BaseKnightSkill
   id: Cruelty
-  icon:
-    sprite: _CE/Skills/Knight/focus.rsi
-    state: icon
   effect: !type:AddAction
     action: CEActionSpellCruelty
 
@@ -13,7 +10,6 @@
   name: Cruelty
   description: Your next melee attack applies [color=#b2e3eb]5 Bruise[/color] stacks, increasing the physical damage taken by targets.
   components:
-  - type: CEActionDangerous
   - type: CEActionManaCost
     manaCost: 4
   - type: CEActionWeaponRequired
@@ -113,7 +109,7 @@
     effects:
     - !type:ApplyStatusEffectStack
       statusEffect: CEStatusEffectBruise
-      stack: 5
+      amount: 5
 
 - type: alert
   id: CECruelty

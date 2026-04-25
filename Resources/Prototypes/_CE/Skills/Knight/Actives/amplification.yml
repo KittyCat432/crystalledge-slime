@@ -1,9 +1,6 @@
 - type: skill
   parent: BaseKnightSkill
   id: Amplification
-  icon:
-    sprite: _CE/Interface/strength.rsi
-    state: icon
   effect: !type:AddAction
     action: CEActionSpellAmplification
 
@@ -46,7 +43,7 @@
     - !type:ApplyStatusEffectStack
       effectTarget: User
       statusEffect: CEStatusEffectStrength
-      stack: 10
+      amount: 10
 
 - type: entity
   id: CEEffectAmplification

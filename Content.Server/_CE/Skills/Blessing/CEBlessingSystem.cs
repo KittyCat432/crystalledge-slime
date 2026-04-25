@@ -97,6 +97,9 @@ public sealed partial class CEBlessingSystem : CESharedBlessingSystem
         if (!TryComp<CEBlessingStatueComponent>(statueUid, out var statue))
             return;
 
+        if (ent.Comp.Skill is { } chosenSkill)
+            TrackChosen(args.Player, chosenSkill);
+
         // Mark player as blessed — they can no longer use this statue
         statue.PlayersBlessed.Add(args.Player);
         statue.OfferedSkills.Remove(args.Player);
@@ -129,6 +132,7 @@ public sealed partial class CEBlessingSystem : CESharedBlessingSystem
             }
 
             statue.Comp.OfferedSkills[player] = statueOffering;
+            TrackOffered(player, statueOffering);
 
             // Immediately mark all generated skills as proposed to prevent
             // other statues from duplicating them this session.

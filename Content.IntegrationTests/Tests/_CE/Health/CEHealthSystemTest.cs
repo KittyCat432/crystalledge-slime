@@ -29,7 +29,6 @@ public sealed class CEHealthSystemTest : GameTest
     destroyThreshold: 25
 ";
 
-    /*
     #region TakeDamage
 
     /// <summary>
@@ -52,7 +51,7 @@ public sealed class CEHealthSystemTest : GameTest
 
             damageableSystem.TakeDamage(ent, damage);
 
-            Assert.That(damageable.TotalDamage, Is.EqualTo(20));
+            Assert.That(damageable.Damage.Total, Is.EqualTo(20));
 
             entManager.DeleteEntity(ent);
         });
@@ -79,7 +78,7 @@ public sealed class CEHealthSystemTest : GameTest
             Assert.Multiple(() =>
             {
                 Assert.That(result, Is.False);
-                Assert.That(damageable.TotalDamage, Is.EqualTo(0));
+                Assert.That(damageable.Damage.Total, Is.EqualTo(0));
             });
 
             entManager.DeleteEntity(ent);
@@ -108,7 +107,7 @@ public sealed class CEHealthSystemTest : GameTest
             damageableSystem.TakeDamage(ent, new CEDamageSpecifier(TestDamageType, 20));
             damageableSystem.Heal(ent, 500);
 
-            Assert.That(damageable.TotalDamage, Is.EqualTo(0));
+            Assert.That(damageable.Damage.Total, Is.EqualTo(0));
 
             entManager.DeleteEntity(ent);
         });
@@ -130,13 +129,13 @@ public sealed class CEHealthSystemTest : GameTest
             var damageable = entManager.GetComponent<CEDamageableComponent>(ent);
 
             damageableSystem.TakeDamage(ent, new CEDamageSpecifier(TestDamageType, 10));
-            Assert.That(damageable.TotalDamage, Is.EqualTo(10));
+            Assert.That(damageable.Damage.Total, Is.EqualTo(10));
 
             damageableSystem.Heal(ent, 0);
-            Assert.That(damageable.TotalDamage, Is.EqualTo(10));
+            Assert.That(damageable.Damage.Total, Is.EqualTo(10));
 
             damageableSystem.Heal(ent, -5);
-            Assert.That(damageable.TotalDamage, Is.EqualTo(10));
+            Assert.That(damageable.Damage.Total, Is.EqualTo(10));
 
             entManager.DeleteEntity(ent);
         });
@@ -170,7 +169,7 @@ public sealed class CEHealthSystemTest : GameTest
             Assert.Multiple(() =>
             {
                 Assert.That(result, Is.True);
-                Assert.That(damageable.TotalDamage, Is.EqualTo(30));
+                Assert.That(damageable.Damage.Total, Is.EqualTo(30));
                 Assert.That(mobState.CurrentState, Is.EqualTo(CEMobState.Alive));
                 Assert.That(mobStateSystem.IsAlive(ent), Is.True);
             });
@@ -180,7 +179,7 @@ public sealed class CEHealthSystemTest : GameTest
 
             Assert.Multiple(() =>
             {
-                Assert.That(damageable.TotalDamage, Is.EqualTo(100));
+                Assert.That(damageable.Damage.Total, Is.EqualTo(100));
                 Assert.That(mobState.CurrentState, Is.EqualTo(CEMobState.Critical));
                 Assert.That(mobStateSystem.IsCritical(ent), Is.True);
                 Assert.That(mobStateSystem.IsAlive(ent), Is.False);
@@ -192,7 +191,7 @@ public sealed class CEHealthSystemTest : GameTest
 
             Assert.Multiple(() =>
             {
-                Assert.That(damageable.TotalDamage, Is.EqualTo(90));
+                Assert.That(damageable.Damage.Total, Is.EqualTo(90));
                 Assert.That(mobState.CurrentState, Is.EqualTo(CEMobState.Alive));
                 Assert.That(mobStateSystem.IsAlive(ent), Is.True);
             });
@@ -202,7 +201,7 @@ public sealed class CEHealthSystemTest : GameTest
 
             Assert.Multiple(() =>
             {
-                Assert.That(damageable.TotalDamage, Is.EqualTo(100089));
+                Assert.That(damageable.Damage.Total, Is.EqualTo(100089));
                 Assert.That(mobState.CurrentState, Is.EqualTo(CEMobState.Critical));
                 Assert.That(mobStateSystem.IsCritical(ent), Is.True);
                 Assert.That(mobStateSystem.IsAlive(ent), Is.False);
@@ -239,7 +238,7 @@ public sealed class CEHealthSystemTest : GameTest
 
             Assert.Multiple(() =>
             {
-                Assert.That(damageable.TotalDamage, Is.EqualTo(999));
+                Assert.That(damageable.Damage.Total, Is.EqualTo(999));
                 Assert.That(mobState.CurrentState, Is.EqualTo(CEMobState.Critical));
             });
 
@@ -248,7 +247,7 @@ public sealed class CEHealthSystemTest : GameTest
 
             Assert.Multiple(() =>
             {
-                Assert.That(damageable.TotalDamage, Is.EqualTo(0));
+                Assert.That(damageable.Damage.Total, Is.EqualTo(0));
                 Assert.That(mobState.CurrentState, Is.EqualTo(CEMobState.Alive));
                 Assert.That(mobStateSystem.IsAlive(ent), Is.True);
             });
@@ -286,14 +285,13 @@ public sealed class CEHealthSystemTest : GameTest
             damageableSystem.TakeDamage(ent, new CEDamageSpecifier(TestDamageType, 1));
         });
 
-        await server.WaitIdleAsync();
+        await server.WaitRunTicks(10);
 
         await server.WaitAssertion(() =>
         {
             Assert.That(entManager.EntityExists(ent), Is.False);
         });
     }
-    */
 
     #region CEDamageSpecifier Math
 

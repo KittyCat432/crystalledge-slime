@@ -3,6 +3,7 @@
   name: Poison
   description: TODO
   components:
+  - type: CENegativeStatusEffect
   - type: StatusEffect
     whitelist:
       components:
@@ -16,7 +17,7 @@
   - type: StatusEffectAlert
     alert: CEPoisoned
   - type: CERemoveStackOnHeal
-    amount: 1
+    healPerStack: 5
   - type: RejuvenateRemovedStatusEffect
   - type: CEStatusEffectStack
     stackDelta: 0

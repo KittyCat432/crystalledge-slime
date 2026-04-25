@@ -298,7 +298,7 @@ public sealed partial class BudgetSpawnEntry
     /// <summary>
     /// Budget cost for spawning one of this entity.
     /// </summary>
-    [DataField(required: true)]
+    [DataField]
     public int Cost = 1;
 
     /// <summary>

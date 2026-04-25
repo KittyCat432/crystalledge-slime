@@ -1,8 +1,10 @@
+using System.Numerics;
 using Content.Server._CE.Procedural.Generators;
 using Content.Server._CE.Procedural.PostProcess;
 using Robust.Shared.Audio;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype.Array;
+using Robust.Shared.Utility;
 
 namespace Content.Server._CE.Procedural.Prototypes;
 
@@ -61,12 +63,21 @@ public sealed partial class CEDungeonLevelPrototype : IPrototype, IInheritingPro
     public bool Stable;
 
     /// <summary>
-    /// Maps exit slot names to the target dungeon level prototypes.
-    /// After generation, exit entities with matching <c>ExitSlot</c> values get
-    /// their <c>TargetLevel</c> assigned from this dictionary.
+    /// When true, the level is auto-generated at round start and registered as an instance.
+    /// Used for entry levels: the default game map can be a placeholder (e.g. <c>Empty</c>),
+    /// and players spawn into the round-start dungeon level via its embedded spawn points.
+    /// Implies stability — round-start levels persist for the entire round.
     /// </summary>
     [DataField]
-    public Dictionary<string, ProtoId<CEDungeonLevelPrototype>> Exits = new();
+    public bool Roundstart;
+
+    /// <summary>
+    /// Maps exit slot numbers to the target dungeon level prototypes.
+    /// After generation, exit entities with matching <c>TargetLevel</c> values get
+    /// their resolved target assigned from this dictionary.
+    /// </summary>
+    [DataField]
+    public Dictionary<int, ProtoId<CEDungeonLevelPrototype>> Exits = new();
 
     [DataField]
     [AlwaysPushInheritance]
@@ -78,4 +89,16 @@ public sealed partial class CEDungeonLevelPrototype : IPrototype, IInheritingPro
     /// </summary>
     [DataField]
     public int MainZLevel = 1;
+
+    /// <summary>
+    /// Position of this level's node on the admin dungeon overview graph (virtual pixels).
+    /// </summary>
+    [DataField("uiPosition")]
+    public Vector2i UIPosition;
+
+    /// <summary>
+    /// Icon used for this level on the admin dungeon overview graph.
+    /// </summary>
+    [DataField]
+    public SpriteSpecifier? Icon;
 }

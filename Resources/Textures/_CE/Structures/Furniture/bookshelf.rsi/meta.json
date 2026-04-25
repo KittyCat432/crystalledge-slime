@@ -8,7 +8,7 @@
   },
   "states": [
     {
-      "name": "wood",
+      "name": "base",
       "directions": 4
     },
     {

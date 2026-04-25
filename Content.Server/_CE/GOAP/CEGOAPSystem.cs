@@ -30,6 +30,12 @@ public sealed partial class CEGOAPSystem : EntitySystem
     private readonly List<int> _candidateGoals = new();
 
     /// <summary>
+    /// Temporary plan buffer used during replanning to compare against the current plan
+    /// without discarding the running action prematurely.
+    /// </summary>
+    private readonly List<CEGOAPAction> _newPlanBuffer = new();
+
+    /// <summary>
     /// Note: CurrentPlan lists in entity components are reused and cleared/repopulated 
     /// rather than creating new lists each time to minimize GC allocations.
     /// </summary>
@@ -184,24 +190,34 @@ public sealed partial class CEGOAPSystem : EntitySystem
         GetActiveGoalIndicesByPriority(ent.Comp);
         foreach (var goalIndex in _candidateGoals)
         {
-            // If this is already the active goal and plan is still valid, keep it
-            if (goalIndex == ent.Comp.ActiveGoalIndex && ent.Comp.CurrentPlan.Count > 0)
-                return;
-
             var goal = ent.Comp.Goals[goalIndex];
 
+            // Always compute a fresh plan into the temporary buffer so we can compare it
+            // against what is currently executing before deciding whether to interrupt.
+            _newPlanBuffer.Clear();
+            if (!CEGOAPPlanner.Plan(ent.Comp.WorldState, goal.DesiredState, _executableActions, _newPlanBuffer))
+                continue;
+
+            if (_newPlanBuffer.Count == 0)
+                continue;
+
+            // If the same goal is active and the new plan begins with the action already
+            // running, the current plan is still optimal — keep it to avoid thrashing.
+            if (goalIndex == ent.Comp.ActiveGoalIndex
+                && ent.Comp.CurrentPlan.Count > 0
+                && ent.Comp.CurrentActionIndex < ent.Comp.CurrentPlan.Count
+                && _newPlanBuffer[0] == ent.Comp.CurrentPlan[ent.Comp.CurrentActionIndex])
+            {
+                return;
+            }
+
+            // A different (or better) plan was found — interrupt the current action and switch.
             // Shutdown old action BEFORE clearing: plan list reuse means the old
             // action reference is lost once the list is cleared.
             ShutdownCurrentAction(ent);
             ent.Comp.CurrentActionStarted = false;
             ent.Comp.CurrentPlan.Clear();
-
-            if (!CEGOAPPlanner.Plan(ent.Comp.WorldState, goal.DesiredState, _executableActions, ent.Comp.CurrentPlan))
-                continue;
-
-            if (ent.Comp.CurrentPlan.Count == 0)
-                continue;
-
+            ent.Comp.CurrentPlan.AddRange(_newPlanBuffer);
             ent.Comp.ActiveGoalIndex = goalIndex;
             ent.Comp.CurrentActionIndex = 0;
             return;

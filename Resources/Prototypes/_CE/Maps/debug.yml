@@ -12,6 +12,9 @@
         - type: StationJobs
           availableJobs:
             CEKnight: [ -1, -1 ]
+            CEMage: [ -1, -1 ]
+            CEPriest: [ -1, -1 ]
+            CEWanderer: [ -1, -1 ]
 
 - type: gameMap
   id: Dev
@@ -29,6 +32,7 @@
             CEKnight: [ -1, -1 ]
             CEMage: [ -1, -1 ]
             CEPriest: [ -1, -1 ]
+            CEWanderer: [ -1, -1 ]
         - type: CEStationZLevels
           mapsAbove:
           - /Maps/_CE/Empty.yml
@@ -59,7 +63,6 @@
 - type: zMap
   id: Empty
   maps:
-  - /Maps/_CE/Empty.yml
   - /Maps/_CE/Empty.yml
   - /Maps/_CE/Empty.yml
   components:

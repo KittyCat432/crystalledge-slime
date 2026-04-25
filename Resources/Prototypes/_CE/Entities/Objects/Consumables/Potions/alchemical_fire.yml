@@ -17,8 +17,9 @@
       shader: unshaded
   - type: CEConsumable
     effects:
-    - !type:IgniteEntity
-      stacks: 6
+    - !type:ApplyStatusEffectStack
+      statusEffect: CEStatusEffectFire
+      amount: 6
     - !type:SpawnEntity
       spawns:
       - CEEffectHealingGeneric
@@ -31,6 +32,14 @@
       effectTarget: User
       spawns:
       - CEEffectPotionAlchemicalFire
+    - !type:AreaEffect
+      range: 2
+      effects:
+      - !type:Damage
+        attackType: Ranged
+        damage:
+          types:
+            Fire: 20
   - type: CEDestructible
   - type: PointLight
     color: "#ffae00"

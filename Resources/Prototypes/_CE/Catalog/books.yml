@@ -3,3 +3,5 @@
   table: !type:GroupSelector
     children:
     - id: CEKnowledgeBook_BasicAlchemy
+    - id: CEKnowledgeBook_ManaConservation
+    - id: CEKnowledgeBook_Regeneration

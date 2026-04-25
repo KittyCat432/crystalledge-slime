@@ -10,12 +10,11 @@
   name: Firewall
   description: You create a wall of fire that sets creatures and the ground [color=#ff8a05]on fire[/color].
   components:
-  - type: CEActionDangerous
   - type: CEVisualizeWideLineAction
     width: 2.5
     projectileMode: true
   - type: CEActionManaCost
-    manaCost: 6
+    manaCost: 5
   - type: Action
     useDelay: 8
     icon:
@@ -155,6 +154,16 @@
     frequency: 0.2
     firstDelay: 0.3
     effects:
+    - !type:AreaEffect
+      range: 1.5
+      affectCaster: false
+      effects:
+      - !type:Damage
+        attackType: Ranged
+        damage:
+          types:
+            Fire: 10
+
     - !type:IgniteArea
       radius: 1.5
       maxStacks: 6

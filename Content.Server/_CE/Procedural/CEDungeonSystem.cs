@@ -65,6 +65,13 @@ public sealed partial class CEDungeonSystem : EntitySystem
         _dungeonJobQueue.Process();
     }
 
+    /// <summary>
+    /// Drives the dungeon job queue forward by one slice. Used to synchronously
+    /// pump pending generations to completion (e.g. during round-start) without
+    /// waiting for the next frame's <see cref="Update"/>.
+    /// </summary>
+    public void ProcessJobs() => _dungeonJobQueue.Process();
+
     public override void Shutdown()
     {
         base.Shutdown();
@@ -135,7 +142,7 @@ public sealed partial class CEDungeonSystem : EntitySystem
                 _zLevels.InitializeZNetwork((result.ZNetworkUid.Value, networkComp));
             }
 
-            _meta.SetEntityName(result.MapUid.Value, $"{proto.ID}");
+            NameDungeonResult(proto, result);
             Log.Info($"CEDungeonSystem: generated dungeon level '{proto.ID}' on map {result.MapId}.");
 
             // Run post-processing layers.
@@ -214,7 +221,7 @@ public sealed partial class CEDungeonSystem : EntitySystem
                     _zLevels.InitializeZNetwork((result.ZNetworkUid.Value, networkComp));
                 }
 
-                _meta.SetEntityName(result.MapUid.Value, $"{protoId}");
+                NameDungeonResult(proto, result);
                 Log.Info($"CEDungeonSystem: generated dungeon level '{protoId}' on map {result.MapId}.");
 
                 // Enqueue post-processing layers.
@@ -230,5 +237,35 @@ public sealed partial class CEDungeonSystem : EntitySystem
                 Log.Error($"CEDungeonSystem: generation failed for '{protoId}'.");
             }
         }, TaskScheduler.FromCurrentSynchronizationContext());
+    }
+
+    /// <summary>
+    /// Renames the freshly generated dungeon's z-network entity (if any) and all of its maps,
+    /// matching the convention used by the station / mapping z-network commands. Falls back to
+    /// renaming just the primary map when the level wasn't created inside a z-network.
+    /// </summary>
+    private void NameDungeonResult(CEDungeonLevelPrototype proto, CEDungeonGenerateResult result)
+    {
+        if (result.MapUid is not { } mapUid)
+            return;
+
+        var dungeonName = proto.Name.HasValue ? Loc.GetString(proto.Name.Value) : proto.ID;
+
+        if (result.ZNetworkUid is { } networkUid
+            && TryComp<CEZLevelsNetworkComponent>(networkUid, out var networkComp))
+        {
+            // Unstable levels can have multiple concurrent instances — disambiguate with the
+            // network entity id so admins can tell them apart in dev tools / overview UIs.
+            var mapNameBase = proto.Stable ? dungeonName : $"{dungeonName} #{networkUid.Id}";
+
+            _zLevels.SetZNetworkName(
+                (networkUid, networkComp),
+                $"Dungeon z-Network: {mapNameBase}",
+                mapNameBase);
+        }
+        else
+        {
+            _meta.SetEntityName(mapUid, proto.Stable ? dungeonName : $"{dungeonName} #{mapUid.Id}");
+        }
     }
 }

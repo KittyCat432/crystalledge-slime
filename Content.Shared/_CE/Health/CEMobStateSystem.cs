@@ -137,7 +137,10 @@ public sealed partial class CEMobStateSystem : EntitySystem
             case CEMobState.Critical:
                 _standing.Down(target);
                 _status.TryAddStatusEffectDuration(target, _fightStatus, TimeSpan.FromSeconds(5));
-                _combat.SetInCombatMode(target, false);
+
+                if (TryComp<CombatModeComponent>(target, out var combatMode))
+                    _combat.SetInCombatMode(target, false, combatMode);
+
                 var dropEv = new DropHandItemsEvent();
                 RaiseLocalEvent(target, ref dropEv);
                 break;
